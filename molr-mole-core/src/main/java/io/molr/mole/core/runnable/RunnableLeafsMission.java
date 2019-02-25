@@ -9,13 +9,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
-public class RunnableLeafsMission {
+public class RunnableLeafsMission extends Mission {
 
     private final ImmutableMap<Block, BiConsumer<In, Out>> runnables;
     private final TreeStructure treeStructure;
     private final MissionParameterDescription parameterDescription;
 
     private RunnableLeafsMission(Builder builder, MissionParameterDescription parameterDescription) {
+        super(builder.root().text());
+
         this.runnables = builder.runnables.build();
         MissionRepresentation representation = builder.representationBuilder.build();
         this.treeStructure = new TreeStructure(representation, builder.parallelBlocksBuilder.build());
@@ -32,10 +34,6 @@ public class RunnableLeafsMission {
 
     public Map<Block, BiConsumer<In, Out>> runnables() {
         return this.runnables;
-    }
-
-    public String name() {
-        return this.treeStructure.rootBlock().text();
     }
 
     public static Builder sequentialRoot(String rootName) {

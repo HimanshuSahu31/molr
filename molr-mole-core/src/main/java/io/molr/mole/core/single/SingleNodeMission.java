@@ -15,15 +15,15 @@ import java.util.function.Function;
 import static io.molr.commons.domain.MissionParameter.required;
 import static java.util.Objects.requireNonNull;
 
-public class SingleNodeMission<R> {
+public class SingleNodeMission<R> extends Mission {
 
-    private final String name;
     private final Checkeds.CheckedThrowingBiFunction<In, Out, R> executable;
     private final Class<R> returnType;
     private final MissionParameterDescription parameterDescription;
 
     public SingleNodeMission(Class<R> returnType, Checkeds.CheckedThrowingBiFunction<In, Out, R> executable, String name, MissionParameterDescription parameterDescription) {
-        this.name = requireNonNull(name, "name must not be null");
+        super(name);
+
         this.executable = requireNonNull(executable, "executable must not be null");
         this.returnType = requireNonNull(returnType, "returnType must not be null");
         this.parameterDescription = requireNonNull(parameterDescription, "parameterDescription must not be null");
@@ -127,7 +127,7 @@ public class SingleNodeMission<R> {
 
 
     public SingleNodeMission<R> withParameters(Set<MissionParameter<?>> parameters) {
-        return new SingleNodeMission<>(this.returnType, this.executable, this.name, new MissionParameterDescription(parameters));
+        return new SingleNodeMission<>(this.returnType, this.executable, this.name(), new MissionParameterDescription(parameters));
     }
 
     public SingleNodeMission<R> withParameters(MissionParameter<?>... parameters) {
@@ -136,10 +136,6 @@ public class SingleNodeMission<R> {
 
     public SingleNodeMission<R> withName(String newName) {
         return new SingleNodeMission<>(this.returnType, this.executable, newName, this.parameterDescription);
-    }
-
-    public String name() {
-        return name;
     }
 
     public Class<R> returnType() {
@@ -157,7 +153,7 @@ public class SingleNodeMission<R> {
     @Override
     public String toString() {
         return "SingleNodeMission{" +
-                "name='" + name + '\'' +
+                "name='" + name() + '\'' +
                 ", executable=" + executable +
                 ", returnType=" + returnType +
                 ", parameterDescription=" + parameterDescription +
@@ -169,7 +165,7 @@ public class SingleNodeMission<R> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SingleNodeMission<?> that = (SingleNodeMission<?>) o;
-        return Objects.equals(name, that.name) &&
+        return super.equals(that) &&
                 Objects.equals(executable, that.executable) &&
                 Objects.equals(returnType, that.returnType) &&
                 Objects.equals(parameterDescription, that.parameterDescription);
@@ -177,6 +173,6 @@ public class SingleNodeMission<R> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, executable, returnType, parameterDescription);
+        return Objects.hash(super.hashCode(), executable, returnType, parameterDescription);
     }
 }
