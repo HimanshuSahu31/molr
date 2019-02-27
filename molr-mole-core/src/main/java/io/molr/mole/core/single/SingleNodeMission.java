@@ -166,13 +166,12 @@ public class SingleNodeMission<R> extends Mission {
         if (o == null || getClass() != o.getClass()) return false;
         SingleNodeMission<?> that = (SingleNodeMission<?>) o;
         return super.equals(that) &&
-                Objects.equals(executable, that.executable) &&
                 Objects.equals(returnType, that.returnType) &&
                 Objects.equals(parameterDescription, that.parameterDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), executable, returnType, parameterDescription);
+        return Objects.hash(super.hashCode(), returnType, parameterDescription);
     }
 }
